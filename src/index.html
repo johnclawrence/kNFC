@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LARP GUI</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+<div id="layout" class="content pure-g">
+  <div id="nav" class="pure-u">
+    <div class="nav-inner" id=navigator>
+      <button class="button-xlarge pure-button" id="nav-playerDB-button" onclick="navPlayerDB()">Player Database</button></br></br>
+      <button class="button-xlarge pure-button" id="nav-characterDB-button" onclick="navCharacterDB()">Character Database</button></br></br>
+    </div>
+  </div>
+  <div id="list" class="pure-u-1">
+    <div class="email-content-header pure-g" id=listHeader>
+      <div class="email-content-controls pure-u-1-2" id=playerDB-header>
+        <button class="pure-button" id=list-characterDB-button onclick="openPlayerDB()">View Player Database</button>
+        <button class="pure-button" id=list-regnewplayer-button onclick="openRegNewPlayer()">Register New Player</button>
+      </div>
+    </div>
+    <form class="pure-form pure-form-aligned"id="new-player-reg-list">
+      <fieldset>
+        </br><span class="pure-controls">Player Name</span></br></br>
+        <div class="pure-control-group">
+            <label for="login-id">Login ID</label>
+            <input type="text" id="login-id" placeholder="Login ID" />
+        </div>
+        <div class="pure-control-group">
+            <label for="first-name">First Name</label>
+            <input type="text" id="first-name" placeholder="First Name" />
+        </div>
+        <div class="pure-control-group">
+            <label for="last-name">Last Name</label>
+            <input type="text" id="last-name" placeholder="Last Name" />
+        </div>
+        </br><span class="pure-controls">Player Details</span></br></br>
+        <div class="pure-control-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Email@gmail.com" />
+        </div>
+        <div class="pure-control-group">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" placeholder="614-123-4567" />
+        </div>
+        <div class="pure-controls">
+          <label for="checkbox-email" class="pure-checkbox">
+            <input type="checkbox" id="checkbox-email" value="" /> Prefer Email
+          </label>
+          <label for="checkbox-text" class="pure-checkbox">
+            <input type="checkbox" id="checkbox-text" value="" /> Prefer Text
+          </label>
+        </div>
+        <div class="pure-control-group">
+            <label for="dob">Date of Birth</label>
+            <input type="text" id="dob" placeholder="MM/DD/YYYY" />
+        </div>
+        </br><span class="pure-controls">Emergency Contact</span></br></br>
+        <div class="pure-control-group">
+          <label for="e-name">Emergency Name</label>
+          <input type="text" id="e-name" placeholder="Emergency Contact" />
+        </div>
+        <div class="pure-control-group">
+          <label for="e-phone">Emergency Phone</label>
+          <input type="tel" id="e-phone" placeholder="614-123-4567" />
+        </div>
+        </br><span class="pure-controls">Legal Stuff</span></br>
+        <div class="pure-controls">
+          <label for="legal-cb" class="pure-checkbox">
+          <input type="checkbox" id="legal-cb" /> I&#x27;ve read the terms and conditions
+          </label>
+          <button type="submit" class="pure-button pure-button-primary">Submit</button>
+        </div>
+      </fieldset>
+    </form>
+    <span id="playerDB-list"></span>
+
+  <div id="main" class="pure-u-1"></div>
+  
+</div>
+
+<script src="./renderer.js"></script>
+<script>
+function closeAll(){
+  var pdbh = document.getElementById("playerDB-header")
+  pdbh.style.display = "none";
+  var nprl = document.getElementById("new-player-reg-list")
+  nprl.style.display = "none";
+  var pdbl = document.getElementById("playerDB-list")
+  pdbl.style.display = "none";
+}
+function navPlayerDB(){
+  closeAll()
+  var pdbh = document.getElementById("playerDB-header")
+  pdbh.style.display = "block";
+  openPlayerDB()
+
+}
+function openPlayerDB(){
+  var pdbl = document.getElementById("playerDB-list")
+  pdbl.style.display = "block";
+}
+
+function navCharacterDB(){
+  closeAll()
+}
+</script>
+</body>
+</html>
+
