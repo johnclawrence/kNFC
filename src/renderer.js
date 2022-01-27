@@ -25,8 +25,9 @@
     const deviceOut = document.getElementById('deviceOut')
     deviceOut.innerText = message.message
   })  
-  ipcRenderer.on('resPlayerList', (event, message) => {
-    const deviceOut = document.getElementById('PD2')
+  ipcRenderer.on('send-playerDB-list', (event, message) => {
+    const deviceOut = document.getElementById('playerDB-list')
     deviceOut.innerText = message.message
   }) 
 })()
+

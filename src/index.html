@@ -43,14 +43,14 @@
         </div>
         <div class="pure-control-group">
             <label for="phone">Phone</label>
-            <input type="tel" id="phone" placeholder="614-123-4567" />
+            <input type="tel" id="ptel" placeholder="614-123-4567" />
         </div>
         <div class="pure-controls">
-          <label for="checkbox-email" class="pure-checkbox">
-            <input type="checkbox" id="checkbox-email" value="" /> Prefer Email
+          <label for="pref-email" class="pure-checkbox">
+            <input type="checkbox" id="pref-email" value="" /> Prefer Email
           </label>
-          <label for="checkbox-text" class="pure-checkbox">
-            <input type="checkbox" id="checkbox-text" value="" /> Prefer Text
+          <label for="pref-text" class="pure-checkbox">
+            <input type="checkbox" id="pref-text" value="" /> Prefer Text
           </label>
         </div>
         <div class="pure-control-group">
@@ -60,22 +60,22 @@
         </br><span class="pure-controls">Emergency Contact</span></br></br>
         <div class="pure-control-group">
           <label for="e-name">Emergency Name</label>
-          <input type="text" id="e-name" placeholder="Emergency Contact" />
+          <input type="text" id="ename" placeholder="Emergency Contact" />
         </div>
         <div class="pure-control-group">
           <label for="e-phone">Emergency Phone</label>
-          <input type="tel" id="e-phone" placeholder="614-123-4567" />
+          <input type="tel" id="etel" placeholder="614-123-4567" />
         </div>
         </br><span class="pure-controls">Legal Stuff</span></br>
         <div class="pure-controls">
-          <label for="legal-cb" class="pure-checkbox">
-          <input type="checkbox" id="legal-cb" /> I&#x27;ve read the terms and conditions
+          <label for="checkbox-legal" class="pure-checkbox">
+          <input type="checkbox" id="checkbox-legal" value="" /> I&#x27;ve read the terms and conditions
           </label>
-          <button type="submit" class="pure-button pure-button-primary">Submit</button>
+          <button type="submit" class="pure-button pure-button-primary" onclick="createNewPlayer()">Submit</button>
         </div>
       </fieldset>
     </form>
-    <span id="playerDB-list"></span>
+    <div id="playerDB-list"></span> 
 
   <div id="main" class="pure-u-1"></div>
   
@@ -99,8 +99,43 @@ function navPlayerDB(){
 
 }
 function openPlayerDB(){
+  var nprl = document.getElementById("new-player-reg-list")
+  nprl.style.display = "none";
+  const {ipcRenderer} = require('electron')
   var pdbl = document.getElementById("playerDB-list")
   pdbl.style.display = "block";
+  ipcRenderer.send('get-player-list')}
+
+function createNewPlayer(){
+  const {ipcRenderer} = require('electron')
+  try {
+  var v1=document.getElementById('login-id').value
+  var v2=document.getElementById('first-name').value
+  var v3=document.getElementById('last-name').value
+  var v4=document.getElementById('email').value
+  var v5=document.getElementById('ptel').value
+  if (document.getElementById('pref-email').checked){
+    v6=1
+  }else{v6=0}
+  if (document.getElementById('pref-text').checked){
+    v7=1
+  }else{v7=0}
+  var v8=document.getElementById('dob').value
+  var v9=document.getElementById('ename').value
+  var v10=document.getElementById('etel').value
+  if (document.getElementById('checkbox-legal').checked){
+    v11=1
+  }else{v11=0}
+  var arrayout = [v1,v2,v3,v4,v5,v6,v7,v8,v9,v10,v11]
+  ipcRenderer.send('make-new-player',arrayout)}
+  catch (error){
+  ipcRenderer.send('make-new-player',error)}
+
+  }
+
+function openRegNewPlayer(){
+  var nprl = document.getElementById("new-player-reg-list")
+  nprl.style.display = "block";
 }
 
 function navCharacterDB(){

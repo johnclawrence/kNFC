@@ -26,8 +26,6 @@ const createWindow = () => {
   });
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
-  //local Node.js server
-  let server = require('../server/server')
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
@@ -86,21 +84,28 @@ const createWindow = () => {
 
   const sqlite3 = require('better-sqlite3-with-prebuilds')
   const db = new sqlite3('./src/localdb.db');
-  ipcMain.on('getPlayerList', (event, arg) => {
-    const sql = "select * from testtable"
-    console.log(sql)
+  ipcMain.on('get-player-list', (event, arg) => {
+    const sql = "select * from factPlayer"
     let stmt = db.prepare(sql);
     let res = stmt.all();
-    if(mainWindow){mainWindow.send('resPlayerList', {message: res}
+    let nameString = res.map((elem)=>{
+      return elem.name;
+    }).join("<br />");
+    if(mainWindow){mainWindow.send('send-playerDB-list', {message: nameString}
     )}
   })
+  ipcMain.on('make-new-player', (event, arg) => {
+    let stmt =  db.prepare("INSERT INTO factPlayer(loginID, fName, lName, email, ptel, prefEmail, prefText, dob, eName, eTel, legalYN)  VALUES (?,?,?,?,?,?,?,?,?,?,?)")
+    stmt.run(arg[0],arg[1],arg[2],arg[3],arg[4],arg[5],arg[6],arg[7],arg[8],arg[9],arg[10] )
+  })
+
 };
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', createWindow);
 
-
+ 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
