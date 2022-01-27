@@ -1,27 +1,36 @@
 const listHeader = document.getElementById('list-header')
 const listBody = document.getElementById('list-body')
-
+//universal code
 function closeAllLists(){
+    closeAllMains()
     listHeader.innerHTML = ""
     listBody.innerHTML = ""
   }
-
+  function resetListButtons(){
+    b1=document.getElementById("list-playerDB-button")
+    b2=document.getElementById("list-regnewplayer-button")
+    b3=document.getElementById("list-characterDB-button")
+    b4=document.getElementById("list-regnewcharacter-button")
+    if (b1){
+    b1.classList.remove("pure-button-active")
+    b2.classList.remove("pure-button-active")}
+    if (b3){
+    b3.classList.remove("pure-button-active")
+    b4.classList.remove("pure-button-active")}
+}
+//Player Level Code
 function playerDBHeader(){
     var pdbHeader=
-    `<div class="email-content-controls pure-u-1-2" id=playerDB-header>
-    <button class="pure-button" id="list-characterDB-button" onclick="openPlayerDB('list-characterDB-button')">View Player Database</button>
+    `<div class="pure-u-1-2" id=playerDB-header>
+    <button class="pure-button" id="list-playerDB-button" onclick="openPlayerDB('list-playerDB-button')">View Player Database</button>
     <button class="pure-button" id="list-regnewplayer-button" onclick="openRegNewPlayer('list-regnewplayer-button')">Register New Player</button>
     </div>`
     listHeader.innerHTML=pdbHeader
 }
-function resetListButtons(){
-    b1=document.getElementById("list-characterDB-button")
-    b2=document.getElementById("list-regnewplayer-button")
-    b1.classList.remove("pure-button-active")
-    b2.classList.remove("pure-button-active")
-}
+
 
 function openPlayerDB(buttonID){
+    closeAllMains()
     const {ipcRenderer} = require('electron')
     ipcRenderer.send('get-player-list')
     resetListButtons()
@@ -32,6 +41,7 @@ function openRegNewPlayer(buttonID){
     var regnewplayerform=
     `<form class="pure-form pure-form-aligned"id="new-player-reg-list">
         <fieldset>
+            <span><h2>Required Information</h2></span>
             </br>
             <span class="pure-controls">Player Name</span></br></br>
             <div class="pure-control-group">
@@ -90,6 +100,8 @@ function openRegNewPlayer(buttonID){
     listBody.innerHTML = regnewplayerform
     resetListButtons()
     toggleButton(buttonID)
+    closeAllMains()
+    RegisterNewPlayerOptional()
 }
 
 
@@ -122,3 +134,63 @@ function createNewPlayer(){
   function getPlayerDetailed(pID){
     const {ipcRenderer} = require('electron')
     ipcRenderer.send('get-specific-player',pID)}
+
+
+    //
+function characterDBHeader(){
+    var pdbHeader=
+    `<div class="pure-u-1-2" id=characterDB-header>
+    <button class="pure-button" id="list-characterDB-button" onclick="openCharacterDB('list-characterDB-button')">View Character Database</button>
+    <button class="pure-button" id="list-regnewcharacter-button" onclick="openRegNewCharacter('list-regnewcharacter-button')">Register New Character</button>
+    </div>`
+    listHeader.innerHTML=pdbHeader
+}
+
+function openCharacterDB(buttonID){    
+    closeAllMains()
+    const {ipcRenderer} = require('electron')
+    ipcRenderer.send('get-character-list')
+    resetListButtons()
+    toggleButton(buttonID)
+}
+function openRegNewCharacter(buttonID){
+    var regnewcharacterform=
+    `<form class="pure-form pure-form-aligned"id="new-character-reg-list">
+        <fieldset>
+            <span><h2>Required Information</h2></span>
+            </br>
+            <span class="pure-controls">Character Information</span></br></br>
+            <div class="pure-control-group">
+                <label for="cid">Character Name</label>
+                <input type="text" id="cid" placeholder="Character Name" />
+            </div>
+            <div class="pure-control-group">
+                <label for="primary-pid">Primary Player ID</label>
+                <input type="text" id="primary-pid" placeholder="pID" />
+            </div>
+            <div class="pure-controls">
+                <button type="submit" class="pure-button pure-button-primary" onclick="createNewCharacter()">Submit</button>
+            </div>
+        </fieldset>
+    </form>`
+    listBody.innerHTML = regnewcharacterform
+    resetListButtons()
+    toggleButton(buttonID)
+    closeAllMains()
+    //RegisterNewCharacterOptional()
+}
+
+function createNewCharacter(){
+    const {ipcRenderer} = require('electron')
+    try {
+    var v1=document.getElementById('cid').value
+    var v2=document.getElementById('primary-pid').value
+    var arrayout = [v1,v2]
+    ipcRenderer.send('make-new-character',arrayout)}
+    catch (error){
+    ipcRenderer.send('make-new-character',error)}
+}
+
+function getCharacterDetailed(cID){
+    const {ipcRenderer} = require('electron')
+    ipcRenderer.send('get-specific-character',cID)}

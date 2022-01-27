@@ -18,20 +18,22 @@ function resetNavButtons(){
 }
 
 function toggleButton(buttonID){
-    resetNavButtons()
     var buttonEID = document.getElementById(buttonID)
     buttonEID.classList.add("pure-button-active")
 }
 
 
 function navPlayerDB(buttonID){
+    resetNavButtons()
     toggleButton(buttonID)
     closeAllLists()
     playerDBHeader()
 }
 
   function navCharacterDB(buttonID){
+    resetNavButtons()
     toggleButton(buttonID)
     closeAllLists()
+    characterDBHeader()
     
   }
