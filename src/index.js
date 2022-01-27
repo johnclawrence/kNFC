@@ -83,9 +83,6 @@ const createWindow = () => {
   })
 
   nfc.on('error', err => {console.log('NFC: an error occurred', err)})
-  
-
-
 
 };
 // This method will be called when Electron has finished

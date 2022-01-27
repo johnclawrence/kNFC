@@ -34,7 +34,7 @@
       return rowStart+elem.pID+rowVar+elem.fName+elem.lName+rowInner+elem.pID+rowEnd;
     }).join("");
     
-    const deviceOut = document.getElementById('playerDB-list')
+    const deviceOut = document.getElementById('list-body')
     deviceOut.innerHTML = htmlOut
   }) 
   ipcRenderer.on('send-specific-player', (event, message) => {
