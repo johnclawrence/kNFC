@@ -85,13 +85,20 @@ const createWindow = () => {
   const sqlite3 = require('better-sqlite3-with-prebuilds')
   const db = new sqlite3('./src/localdb.db');
   ipcMain.on('get-player-list', (event, arg) => {
-    const sql = "select * from factPlayer"
+    const sql = "SELECT * FROM factPlayer"
     let stmt = db.prepare(sql);
     let res = stmt.all();
-    let nameString = res.map((elem)=>{
-      return elem.name;
-    }).join("<br />");
-    if(mainWindow){mainWindow.send('send-playerDB-list', {message: nameString}
+    if(mainWindow){mainWindow.send('send-playerDB-list', {message: res}
+    )}
+  })
+  ipcMain.on('get-specific-player', (event, arg) => {
+    console.log(arg)
+    const sql = "SELECT * FROM  factPlayer WHERE pID="+arg
+    console.log(sql)
+    let stmt = db.prepare(sql);
+    let res = stmt.all();
+    console.log(res)
+    if(mainWindow){mainWindow.send('send-specific-player', {message: res}
     )}
   })
   ipcMain.on('make-new-player', (event, arg) => {

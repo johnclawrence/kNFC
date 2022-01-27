@@ -26,8 +26,19 @@
     deviceOut.innerText = message.message
   })  
   ipcRenderer.on('send-playerDB-list', (event, message) => {
+    var rowStart='<div class="email-item pure-g" onclick="getPlayerDetailed('
+    var rowVar=')"><div class="pure-u-3-4"><h5 class="email-name">'
+    var rowInner='</h5><h4 class="email-subject">'
+    var rowEnd='</h4></div></div>'
+    let htmlOut = message.message.map((elem)=>{
+      return rowStart+elem.pID+rowVar+elem.fName+elem.lName+rowInner+elem.pID+rowEnd;
+    }).join("");
+    
     const deviceOut = document.getElementById('playerDB-list')
+    deviceOut.innerHTML = htmlOut
+  }) 
+  ipcRenderer.on('send-specific-player', (event, message) => {
+    const deviceOut = document.getElementById('playerDB-main')
     deviceOut.innerText = message.message
   }) 
 })()
-

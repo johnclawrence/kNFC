@@ -17,8 +17,8 @@
   <div id="list" class="pure-u-1">
     <div class="email-content-header pure-g" id=listHeader>
       <div class="email-content-controls pure-u-1-2" id=playerDB-header>
-        <button class="pure-button" id=list-characterDB-button onclick="openPlayerDB()">View Player Database</button>
-        <button class="pure-button" id=list-regnewplayer-button onclick="openRegNewPlayer()">Register New Player</button>
+        <button class="pure-button" id='list-characterDB-button' onclick="openPlayerDB()">View Player Database</button>
+        <button class="pure-button" id='list-regnewplayer-button' onclick="openRegNewPlayer()">Register New Player</button>
       </div>
     </div>
     <form class="pure-form pure-form-aligned"id="new-player-reg-list">
@@ -75,9 +75,11 @@
         </div>
       </fieldset>
     </form>
-    <div id="playerDB-list"></span> 
-
-  <div id="main" class="pure-u-1"></div>
+    <div id="playerDB-list"></div> 
+  </div>
+  <div id="main" class="pure-u-1">
+    <div id="playerDB-main"></div>
+  </div>
   
 </div>
 
@@ -137,6 +139,11 @@ function openRegNewPlayer(){
   var nprl = document.getElementById("new-player-reg-list")
   nprl.style.display = "block";
 }
+
+function getPlayerDetailed(pID){
+  const {ipcRenderer} = require('electron')
+  ipcRenderer.send('get-specific-player',pID)}
+  
 
 function navCharacterDB(){
   closeAll()
