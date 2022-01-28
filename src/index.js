@@ -1,12 +1,11 @@
 
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
-const {NFC, TAG_ISO_14443_3, TAG_ISO_14443_4, KEY_TYPE_A, KEY_TYPE_B} = require('nfc-pcsc');
 const { emit } = require('process');
 const { readFileSync } = require('fs');
+const {NFC} = require('nfc-pcsc');
 const nfc = new NFC()
-var readerOn = true
-
+var readerG
 
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -24,66 +23,34 @@ const createWindow = () => {
       preload: path.join(__dirname, './preload.js')
     }
   });
+  
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
   //This is where database functions live
   require(path.join(__dirname, './dbQueries.js'))
-
-  
-  var key = 'FFFFFFFFFFFF';
-  var keyType = KEY_TYPE_A;
-  var Sector = 0
-  var readerG, uid, atr, sectorMax
-
-
+  //This is where NFC functions live
+  require(path.join(__dirname, './nfcQueries.js'))
   nfc.on('reader', async reader => {
-    readerG=reader
-    if(mainWindow){mainWindow.send('attach-device', {message: `NFC (${reader.reader.name}): device attached`})}
-    //console.log(`NFC (${reader.reader.name}): device attached`)
-    reader.on('card', async card => {
-      uid=card.uid
-      if (await uid){
-        if(mainWindow){mainWindow.send('cardUID', {message: uid})}
-      }
-      atr=card.atr
-      if(await atr.toString('hex')=='3b8f8001804f0ca000000306030001000000006a'){
-        if(mainWindow){mainWindow.send('cardType', {message: 'MiFare Classic 1k'})}
-        sectorMax=64
-      }
-      if(await atr.toString('hex')!='3b8f8001804f0ca000000306030001000000006a'){
-        if(mainWindow){mainWindow.send('cardType', {message: 'Unknown Card Type'})}
-        sectorMax=64
-      }
-      console.log(`NFC (${reader.reader.name}): card detected`, card.uid)
-      if(mainWindow){mainWindow.send('card', {message: `NFC (${reader.reader.name}): card detected`, card})}
-    })
     reader.on('error', err => {console.log(`NFC (${reader.reader.name}): an error occurred`, err)})
-    reader.on('end', () => {
-        console.log(`NFC (${reader.reader.name}): device removed`)
-        if(mainWindow){mainWindow.send('remove-device', {message: `NFC (${reader.reader.name}): device removed`})}
-    })
+    reader.on('end', () => {console.log(`NFC (${reader.reader.name}): device removed`)})
+    var readerDevice=reader.reader.name
+    if (mainWindow){mainWindow.send('nfc-iReader', reader)}
+    reader.on('card', async card => {
+      var uid=card.uid
+      var cardType='Unknown Card Type'
+      if (await uid){
+        atr=card.atr
+        if(atr.toString('hex')=='3b8f8001804f0ca000000306030001000000006a'){
+            var cardType='MiFare Classic 1k'
+          }
+        res = [readerDevice,cardType,uid]
+        if(mainWindow){mainWindow.send('nfc-init', {message: res})}
+        if(mainWindow){mainWindow.send('nfc-iCard', {message: card})}
+        }
+      })
   })
-
-  ipcMain.on('key', (event, arg) => {
-    console.log(arg)
-  })
-  ipcMain.on('ab', (event, arg) => {
-    console.log(arg)
-  })
-  ipcMain.on('sector', (event, arg) => {
-    Sector = arg
-    var toView = readNFCSector(readerG,Sector,keyType, key, mainWindow)
-  })
-  ipcMain.on('asynchronous-message', (event, arg) => {
-    console.log( arg );
-    readerOn = arg
-    if(mainWindow){mainWindow.send('attach-device', {message: `NFC (${readerG.reader.name}): device attached`})}
-  })
-
-  nfc.on('error', err => {console.log('NFC: an error occurred', err)})
-
 };
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

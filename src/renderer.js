@@ -1,6 +1,25 @@
 (() => {
   //NFC Functions
   const {ipcRenderer} = require('electron')
+  ipcRenderer.on('nfc-iCard', (event, message) => {
+    console.log(message.message)
+
+  })
+  ipcRenderer.on('nfc-iReader', (event, message) => {
+    console.log(message.message)
+ 
+  })
+  ipcRenderer.on('nfc-init', (event, message) => {
+    const listbody = document.getElementById('list-body')
+    var reader=message.message[0]
+    var cardType=message.message[1]
+    var uid=message.message[2]
+    outhtml=
+    `Reader ${reader} <br />
+    cardType ${cardType} <br />
+    cardUID ${uid}`
+    listbody.innerHTML = outhtml
+  })
   ipcRenderer.on('attach-device', (event, message) => {
     const readerStatus = document.getElementById('readerStatus')
     readerStatus.innerText = message.message

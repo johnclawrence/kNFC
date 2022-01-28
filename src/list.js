@@ -11,12 +11,16 @@ function closeAllLists(){
     b2=document.getElementById("list-regnewplayer-button")
     b3=document.getElementById("list-characterDB-button")
     b4=document.getElementById("list-regnewcharacter-button")
+    b5=document.getElementById("list-readNFC-button")
     if (b1){
     b1.classList.remove("pure-button-active")
     b2.classList.remove("pure-button-active")}
     if (b3){
     b3.classList.remove("pure-button-active")
     b4.classList.remove("pure-button-active")}
+    if (b5){
+    b5.classList.remove("pure-button-active")
+    }
 }
 //Player Level Code
 function playerDBHeader(){
@@ -194,3 +198,19 @@ function createNewCharacter(){
 function getCharacterDetailed(cID){
     const {ipcRenderer} = require('electron')
     ipcRenderer.send('get-specific-character',cID)}
+
+//NFC Stuff
+function nfcDBHeader(){
+    var pdbHeader=
+    `<div class="pure-u-1-2" id=nfc-header>
+    <button class="pure-button" id="list-readNFC-button" onclick="readNFC('list-readNFC-button')">readNFC</button>
+    </div>`
+    listHeader.innerHTML=pdbHeader
+}
+
+function readNFC(buttonID){
+    resetListButtons()
+    toggleButton(buttonID)
+    closeAllMains()
+    ipcRenderer.send('nfc-on')    
+}
