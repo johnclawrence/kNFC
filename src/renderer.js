@@ -15,34 +15,26 @@
     var cardType=message.message[1]
     var uid=message.message[2]
     outhtml=
-    `Reader ${reader} <br />
-    cardType ${cardType} <br />
-    cardUID ${uid}`
+    `
+    <form class="pure-form pure-form-stacked">
+    <fieldset>
+        <legend>Reader ${reader} <br />
+        cardType ${cardType} <br />
+        cardUID ${uid}</legend>
+        <label for="stacked-key">Key</label>
+        <input type="password" id="stacked-key" placeholder="Password" />
+        <label for="stacked-keyType">Key Type</label>
+        <select id="stacked-keyType">
+            <option>Key A</option>
+            <option>Key B</option>
+        </select><br />
+        <button class="pure-button pure-button-primary" type='button' onclick="listReadNFCAll()" >Access</button>
+      </fieldset>
+      </form>`
     listbody.innerHTML = outhtml
-  })
-  ipcRenderer.on('attach-device', (event, message) => {
-    const readerStatus = document.getElementById('readerStatus')
-    readerStatus.innerText = message.message
-  })
-  ipcRenderer.on('remove-device', (event, message) => {
-    const readerStatus = document.getElementById('readerStatus')
-    readerStatus.innerText = message.message
-  })
-  ipcRenderer.on('card', (event, message) => {
-    const messageSpan = document.getElementById('message')
-    const cardSpan = document.getElementById('card')
-    cardSpan.innerText = message.card.uid
-  })
-  ipcRenderer.on('cardType', (event, message) => {
-    const cardType = document.getElementById('cardType')
-    cardType.innerText = message.message
-  })
-  ipcRenderer.on('cardUID', (event, message) => {
-    const cardUID = document.getElementById('cardUID')
-    cardUID.innerText = message.message
-  })    
-  ipcRenderer.on('deviceOut', (event, message) => {
-    const deviceOut = document.getElementById('deviceOut')
+  })  
+  ipcRenderer.on('nfc-raw', (event, message) => {
+    const deviceOut = document.getElementById('main-body')
     deviceOut.innerText = message.message
   })  
   //SQL Functions
@@ -51,7 +43,7 @@
     var searchbar=
     `<form class="pure-form">
       <input type="text" class="pure-input-rounded" />
-      <button type="submit" class="pure-button">Search</button>
+      <button class="pure-button">Search</button>
     </form>`
     var rowStart='<div class="email-item pure-g" onclick="getPlayerDetailed('
     var rowVar=')"><div class="pure-u-3-4"><h5 class="email-name">'
@@ -88,7 +80,7 @@
     var searchbar=
     `<form class="pure-form">
       <input type="text" class="pure-input-rounded" />
-      <button type="submit" class="pure-button">Search</button>
+      <button class="pure-button">Search</button>
     </form>`
     var rowStart='<div class="email-item pure-g" onclick="getCharacterDetailed('
     var rowVar=')"><div class="pure-u-3-4"><h5 class="email-name">'

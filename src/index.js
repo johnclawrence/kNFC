@@ -77,53 +77,6 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
-async function authNFC(reader,Sector,keyType, key){
-  try {
-    await reader.authenticate(Sector, keyType, key);
-    console.log(`sector ${Sector} successfully authenticated`);
 
-  } catch (err) {
-    console.log(`error when authenticating`, reader, err);
-    return;
-  }
-}
-async function readNFCBlock(reader,Block,keyType, key){
-  try {
-    await reader.authenticate(Block, keyType, key);
-  } catch (err) {
-    console.log(`error when authenticating`, reader, err);
-    return;
-  }
-  try {
-    const data = await reader.read(Block, 16, 16); // blockSize=16 must specified for MIFARE Classic cards
-    console.log(`data read`, data);
-    const payload = data.readInt32BE(0);
-    console.log(`data converted`, payload);
-    return(data);
-  } catch (err) {
-    console.log(`error when reading data`, reader, err);
-  }
-}
-async function readNFCSector(reader,Sector,keyType, key,mainWindow){
-  try {
-    await reader.authenticate(Sector, keyType, key);
-  } catch (err) {
-    console.log(`error when authenticating`, reader, err);
-    return;
-  }
-  var blo = Sector % 4
-  var sec = (Sector - blo)/4
-  var out =[]
-  for await (const i of [0,1,2,3]){
-    try {
-      const data = await reader.read(Sector-blo+i, 16, 16); // blockSize=16 must specified for MIFARE Classic cards
-      out[i]= (data.toString('hex'))
-
-    } catch (err) {
-      console.log(`error when reading data`, reader, err);
-      }
-    }
-    if(mainWindow){mainWindow.send('deviceOut', {message: out})}
-  }
 
 

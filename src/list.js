@@ -214,3 +214,10 @@ function readNFC(buttonID){
     closeAllMains()
     ipcRenderer.send('nfc-on')    
 }
+
+function listReadNFCAll(){
+    var v1=document.getElementById('stacked-key').value
+    var v2=document.getElementById('stacked-keyType').value
+    var arrayout = [v1,v2]
+    ipcRenderer.send('nfc-readall',arrayout)  
+}
