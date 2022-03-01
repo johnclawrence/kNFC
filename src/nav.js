@@ -31,6 +31,7 @@ function navPlayerDB(buttonID){
     toggleButton(buttonID)
     closeAllLists()
     playerDBHeader()
+    openPlayerDB('list-playerDB-button')
 }
 
   function navCharacterDB(buttonID){
@@ -38,6 +39,7 @@ function navPlayerDB(buttonID){
     toggleButton(buttonID)
     closeAllLists()
     characterDBHeader()
+    openCharacterDB('list-characterDB-button')
   }
 
   function navNFC(buttonID){
